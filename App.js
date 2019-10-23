@@ -6,9 +6,11 @@ import {
   View,
   FlatList,
   Image,
-  Switch
+  Switch,
+  Button
 } from 'react-native';
-import RowItem from './row-item';
+import ModalAddUser from './modal-add-user';
+import List from './list';
 const list = [
   {
     id: 1000,
@@ -23,8 +25,10 @@ const list = [
 
 export default function App() {
   const [users, setUsers] = useState(list);
-  // Khai bao state visible xu ly hien thi anh
-  const [visible, setVisible] = useState(true);
+  // Khai bao state visible xu ly hien thi Modal them user
+  const [visible, setVisible] = useState(false);
+
+  const [editUser, setEditUser] = useState(null);
   // Khai bao API de su dung khi fetch
   const API = 'http://5da70d97127ab80014c1dc19.mockapi.io/tuan/users/';
 
@@ -32,18 +36,20 @@ export default function App() {
   useEffect(
     () => {
       // call API lay ds users
-      fetch(API)
-        .then(response => response.json())
-        .then(responseJson => {
-          console.log(345);
-          // Thuc hien setstate bang setUsers de cap nhat gia tri cho state users
-          setUsers(responseJson);
-        })
-        .catch(error => console.log(error));
+      handleFetchData();
     },
     [] // mang bien can theo doi thay doi de tiep tuc goi API
   );
-
+  const handleFetchData = () => {
+    fetch(API)
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(345);
+        // Thuc hien setstate bang setUsers de cap nhat gia tri cho state users
+        setUsers(responseJson);
+      })
+      .catch(error => console.log(error));
+  }
 
   // // ham xu ly viec an hien anh
   // const handleSwitch = (value) => {
@@ -58,35 +64,72 @@ export default function App() {
       {method: 'DELETE'}
     )
     // .then(response => response.json())
-    .then(() => console.log('Deleted!'))
+    .then(() => handleFetchData())
     .catch(error => console.log(error));
+  }
+
+  const handleAddUser = (name, address, phone, avatar, is_active) => {
+    // Call API them moi user
+    fetch(
+      API,
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name, address, phone, avatar, is_active
+        }),
+      }
+    ).then(() => handleFetchData())
+    .catch(error => console.log(error));
+  }
+
+  const handleShowModalEdit = (id) => {
+    fetch(
+      `${API}/${id}`
+    ).then(response => response.json())
+    .then(responseJson => {
+      setEditUser(responseJson);
+      setVisible(true);
+    })
+    .catch(error => console.log(error));
+  }
+
+  const handleUpdateUser = (id, name, address, phone, avatar, is_active) => {
+    fetch(
+      `${API}/${id}`,
+      {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name, address, phone, avatar, is_active
+        }),
+      }
+    ).then(() => handleFetchData())
+      .catch(error => console.log(error));
+
+    setVisible(false);
   }
 
   return (
     <View style={styles.container}>
-      <View style={styles.topImage}>
-        {
-          visible ?
-            <Image
-              style={styles.image}
-              source={require('./chim.png')}
-            /> : null
-        }
-        <Switch
-          value={visible}
-          onValueChange={(value) => setVisible(value)}
-        />
-      </View>
-      <FlatList
-        data={users}
-        //truyen ca item sang RowItem
-        renderItem={({item}) =>
-          <RowItem
-            item={item}
-            handleDelete={handleDelete} // truyen props la ham xoa sang RowItem
-          />
-        }
-        keyExtractor={(user) => user.id}
+      <Button title='Add User' onPress={() => setVisible(true)} />
+      <ModalAddUser
+        user={editUser}
+        visible={visible}
+        handleAddUser={handleAddUser}
+        handleUpdateUser={handleUpdateUser}
+      />
+      <List
+        users={users}
+        handleDelete={handleDelete}
+        handleFetchData={handleFetchData}
+        handleShowModalEdit={handleShowModalEdit}
       />
     </View>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet, Button} from 'react-native';
 
-export default function RowItem({item, handleDelete}) {
+export default function RowItem({ item, handleDelete, handleShowModalEdit}) {
     return (
         <View>
             <Text>{item.name}</Text>
@@ -12,6 +12,10 @@ export default function RowItem({item, handleDelete}) {
             <Button
                 title='DELETE'
                 onPress={() => handleDelete(item.id)}
+            />
+            <Button
+                title='EDIT'
+                onPress={() => handleShowModalEdit(item.id)}
             />
         </View>
     )
