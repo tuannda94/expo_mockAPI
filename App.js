@@ -27,9 +27,16 @@ export default function App() {
   const [users, setUsers] = useState(list);
   // Khai bao state visible xu ly hien thi Modal them user
   const [visible, setVisible] = useState(false);
+<<<<<<< Updated upstream
 
   const [editUser, setEditUser] = useState(null);
   // Khai bao API de su dung khi fetch
+=======
+  // Khai bao state luu thong tin user duoc update,
+  // Mac dinh la null, neu Modal k co thong tin thi se la tao moi
+  const [userUpdate, setUserUpdate] = useState(null);
+  // API
+>>>>>>> Stashed changes
   const API = 'http://5da70d97127ab80014c1dc19.mockapi.io/tuan/users/';
 
   // useEffect(xu ly API, [mang nhung bien co su thay doi])
@@ -68,7 +75,12 @@ export default function App() {
     .catch(error => console.log(error));
   }
 
+<<<<<<< Updated upstream
   const handleAddUser = (name, address, phone, avatar, is_active) => {
+=======
+  // ham nhan du lieu nhap vao tu modal-add-user theo cac tham so
+  const handleAddUser = (name, address, phone, avatar, active) => {
+>>>>>>> Stashed changes
     // Call API them moi user
     fetch(
       API,
@@ -76,12 +88,25 @@ export default function App() {
         method: 'POST',
         headers: {
           Accept: 'application/json',
+<<<<<<< Updated upstream
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name, address, phone, avatar, is_active
         }),
       }
+=======
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          address: address,
+          phone: phone,
+          avatar: avatar,
+          is_active: active
+        })
+      },
+>>>>>>> Stashed changes
     ).then(() => handleFetchData())
     .catch(error => console.log(error));
   }
@@ -116,20 +141,70 @@ export default function App() {
     setVisible(false);
   }
 
+  // Update du lieu nhan tu modal
+  const handleUpdate = (id, name, address, phone, avatar, active) => {
+    // call api update
+      fetch(
+        `${API}/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name,
+            address,
+            phone,
+            avatar,
+            is_active: active
+          })
+        }
+      ).then(() => handleFetchData())
+      .catch(error => console.log(error))
+
+    // an modal di
+    setVisible(false);
+  }
+
+  const handleEdit = (itemId) => {
+    //Nhan itemId tu RowItem khi press nut EDIT
+    // Lay duoc user co id = itemId -> truyen sang Modal
+    fetch(
+      `${API}/${itemId}`
+    ).then(response => response.json())
+    .then(responseJson => setUserUpdate(responseJson))
+    .catch(error => console.log(error))
+
+    // Hien thi modal
+    setVisible(true);
+  }
+
   return (
     <View style={styles.container}>
       <Button title='Add User' onPress={() => setVisible(true)} />
       <ModalAddUser
+<<<<<<< Updated upstream
         user={editUser}
         visible={visible}
         handleAddUser={handleAddUser}
         handleUpdateUser={handleUpdateUser}
+=======
+        user={userUpdate}
+        visible={visible}
+        handleAddUser={handleAddUser}
+        handleUpdate={handleUpdate}
+>>>>>>> Stashed changes
       />
       <List
         users={users}
         handleDelete={handleDelete}
+<<<<<<< Updated upstream
         handleFetchData={handleFetchData}
         handleShowModalEdit={handleShowModalEdit}
+=======
+        handleEdit={handleEdit}
+>>>>>>> Stashed changes
       />
     </View>
   );

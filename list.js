@@ -5,7 +5,11 @@ import RowItem from './row-item';
 export default function List({
     users,
     handleDelete,
+<<<<<<< Updated upstream
     handleShowModalEdit
+=======
+    handleEdit
+>>>>>>> Stashed changes
 }) {
     // useEffect(() => {
     //     // handleFetchData();
@@ -17,6 +21,7 @@ export default function List({
         renderItem={({ item }) => (
           <RowItem
             item={item}
+            handleEdit={handleEdit}
             handleDelete={handleDelete}
             handleShowModalEdit={handleShowModalEdit}
           />
