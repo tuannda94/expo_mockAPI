@@ -1,7 +1,11 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet, Button} from 'react-native';
 
-export default function RowItem({item, handleDelete}) {
+<<<<<<< Updated upstream
+export default function RowItem({ item, handleDelete, handleShowModalEdit}) {
+=======
+export default function RowItem({item, handleDelete, handleEdit}) {
+>>>>>>> Stashed changes
     return (
         <View>
             <Text>{item.name}</Text>
@@ -9,10 +13,28 @@ export default function RowItem({item, handleDelete}) {
             <Text>{item.phone}</Text>
             <Text>{item.is_active ? 'Active' : 'Deactive'}</Text>
             <Image style={styles.avatar} source={{uri: item.avatar}} />
+<<<<<<< Updated upstream
             <Button
                 title='DELETE'
                 onPress={() => handleDelete(item.id)}
             />
+            <Button
+                title='EDIT'
+                onPress={() => handleShowModalEdit(item.id)}
+            />
+=======
+
+            <View>
+                <Button
+                    title='DELETE'
+                    onPress={() => handleDelete(item.id)}
+                /><Button
+                    title='EDIT'
+                    onPress={() => handleEdit(item.id)}
+                />
+            </View>
+
+>>>>>>> Stashed changes
         </View>
     )
 }
